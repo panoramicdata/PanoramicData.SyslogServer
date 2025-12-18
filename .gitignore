@@ -260,3 +260,6 @@ paket-files/
 __pycache__/
 *.pyc
 /PanoramicData.SyslogServer.Test/appsettings.json
+
+# NuGet API key
+nuget-key.txt

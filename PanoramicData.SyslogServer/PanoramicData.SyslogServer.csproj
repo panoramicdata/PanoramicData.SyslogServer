@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Authors>Panoramic Data Limited</Authors>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -9,12 +9,13 @@
 		<PackageTags>ssh,server,nuget</PackageTags>
 		<Description>PanoramicData.SyslogServer is a Syslog Server</Description>
 		<Title>PanoramicData.SyslogServer</Title>
-		<Copyright>Panoramic Data Limited 2024</Copyright>
+		<Copyright>Panoramic Data Limited 2025</Copyright>
 		<PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.SyslogServer</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<PackageIcon>Panoramic Data.png</PackageIcon>
 		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -25,8 +26,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.0" />
-		<PackageReference Include="Nerdbank.GitVersioning" Version="3.6.146">
+		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1" />
+		<PackageReference Include="Nerdbank.GitVersioning" Version="3.9.50">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
