@@ -3,7 +3,7 @@
 public class SyslogServerConfiguration
 {
 	/// <summary>
-	/// The address on which the SSH server should listen.
+  /// The address on which the Syslog server should listen.
 	/// Use:
 	/// - an IP address
 	/// - "IPv6Any" to listen dual stack

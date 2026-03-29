@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,8 +7,8 @@ namespace ExampleApp;
 
 public class CommandService
 {
-	private Process _process = null;
-	private ProcessStartInfo _startInfo = null;
+    private Process? _process;
+	private readonly ProcessStartInfo _startInfo;
 
 	public CommandService(string command, string args)
 	{
@@ -22,30 +22,33 @@ public class CommandService
 		};
 	}
 
-	public event EventHandler<byte[]> DataReceived;
-	public event EventHandler EofReceived;
-	public event EventHandler<uint> CloseReceived;
+   public event EventHandler<byte[]>? DataReceived;
+	public event EventHandler? EofReceived;
+	public event EventHandler<uint>? CloseReceived;
 
 	public void Start()
 	{
-		_process = Process.Start(_startInfo);
+     _process = Process.Start(_startInfo) ?? throw new InvalidOperationException("Failed to start process.");
 		Task.Run(() => MessageLoop());
 	}
 
 	public void OnData(byte[] data)
 	{
-		_process.StandardInput.BaseStream.Write(data, 0, data.Length);
-		_process.StandardInput.BaseStream.Flush();
+       var process = _process ?? throw new InvalidOperationException("The process has not been started.");
+		process.StandardInput.BaseStream.Write(data, 0, data.Length);
+		process.StandardInput.BaseStream.Flush();
 	}
 
-	public void OnClose() => _process.StandardInput.BaseStream.Close();
+  public void OnClose()
+		=> (_process ?? throw new InvalidOperationException("The process has not been started.")).StandardInput.BaseStream.Close();
 
 	private void MessageLoop()
 	{
+     var process = _process ?? throw new InvalidOperationException("The process has not been started.");
 		var bytes = new byte[1024 * 64];
 		while (true)
 		{
-			var len = _process.StandardOutput.BaseStream.Read(bytes, 0, bytes.Length);
+         var len = process.StandardOutput.BaseStream.Read(bytes, 0, bytes.Length);
 			if (len <= 0)
 				break;
 
@@ -56,6 +59,6 @@ public class CommandService
 		}
 
 		EofReceived?.Invoke(this, EventArgs.Empty);
-		CloseReceived?.Invoke(this, (uint)_process.ExitCode);
+     CloseReceived?.Invoke(this, (uint)process.ExitCode);
 	}
 }

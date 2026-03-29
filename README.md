@@ -1,15 +1,18 @@
 ## Panoramic Data Syslog Server
-Panoramic Data Syslog Server is a lightweight [SSH](http://en.wikipedia.org/wiki/Syslog) server side application. 
 
----
-### Nuget
-[![NuGet version](https://badge.fury.io/nu/FxSsh.svg)](https://www.nuget.org/packages/PanoramicData.SyslogServer/)
+[![NuGet version](https://img.shields.io/nuget/v/PanoramicData.SyslogServer.svg)](https://www.nuget.org/packages/PanoramicData.SyslogServer/)
+[![Codacy grade](https://img.shields.io/badge/Codacy-A-brightgreen)](https://app.codacy.com/gh/panoramicdata/PanoramicData.SyslogServer/dashboard)
+
+Panoramic Data Syslog Server is a lightweight [Syslog](https://en.wikipedia.org/wiki/Syslog) server library for .NET.
+
+## Installation
 
 `PM> Install-Package PanoramicData.SyslogServer`
 
-### Example code
-The example project provides a basic Syslog server for Windows with command line output.  Check out the source!
+## Example code
 
----
-### License
-The MIT license
+The example project provides a basic Syslog server for Windows with command-line output.
+
+## License
+
+This project is licensed under the MIT License.

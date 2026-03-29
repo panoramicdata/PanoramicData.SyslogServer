@@ -1,0 +1,66 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.201
+
+      - name: Restore library
+        run: dotnet restore PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj
+
+      - name: Restore example app
+        run: dotnet restore ExampleApp/ExampleApp.csproj
+
+      - name: Build library
+        run: dotnet build PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj --configuration Release --no-restore
+
+      - name: Build example app
+        run: dotnet build ExampleApp/ExampleApp.csproj --configuration Release --no-restore
+
+      - name: Pack library
+        run: dotnet pack PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Upload packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: nuget-packages
+          path: artifacts/*.nupkg
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.201
+
+      - name: Restore library
+        run: dotnet restore PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj
+
+      - name: Pack library
+        run: dotnet pack PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj --configuration Release --output ./artifacts
+
+      - name: Publish to NuGet
+        run: dotnet nuget push "./artifacts/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
