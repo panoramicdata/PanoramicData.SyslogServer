@@ -14,6 +14,12 @@ using System.Threading.Tasks;
 
 namespace PanoramicData.SyslogServer;
 
+/// <summary>
+/// A hosted syslog server that listens for messages over UDP and/or TCP.
+/// </summary>
+/// <param name="options">The server configuration options.</param>
+/// <param name="loggerFactory">The logger factory.</param>
+/// <param name="syslogApplication">The application that handles received syslog messages.</param>
 public partial class SyslogServer(
 	IOptions<SyslogServerConfiguration> options,
 	ILoggerFactory loggerFactory,
@@ -27,10 +33,14 @@ public partial class SyslogServer(
 	private Task? _udpListenerTask;
 	private Task? _tcpListenerTask;
 
+	/// <summary>
+	/// A unique identifier for this server instance.
+	/// </summary>
 	public Guid Id { get; } = Guid.NewGuid();
 
 	private readonly SyslogServerConfiguration _config = (options ?? throw new ArgumentNullException(nameof(options))).Value;
 
+	/// <inheritdoc />
 	public Task StartAsync(CancellationToken cancellationToken)
 	{
 		if (_started)
@@ -84,6 +94,7 @@ public partial class SyslogServer(
 		return Task.CompletedTask;
 	}
 
+	/// <inheritdoc />
 	public Task StopAsync(CancellationToken cancellationToken)
 	{
 		lock (_lock)
@@ -233,6 +244,10 @@ public partial class SyslogServer(
 		return Task.CompletedTask;
 	}
 
+	/// <summary>
+	/// Releases resources used by the server.
+	/// </summary>
+	/// <param name="disposing">Whether managed resources should be disposed.</param>
 	protected virtual void Dispose(bool disposing)
 	{
 		if (!_disposedValue)
@@ -246,6 +261,7 @@ public partial class SyslogServer(
 		}
 	}
 
+	/// <inheritdoc />
 	public void Dispose()
 	{
 		// Do not change this code. Put clean-up code in 'Dispose(bool disposing)' method

@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Panoramic Data Syslog Server
 
 [![NuGet version](https://img.shields.io/nuget/v/PanoramicData.SyslogServer.svg)](https://www.nuget.org/packages/PanoramicData.SyslogServer/)

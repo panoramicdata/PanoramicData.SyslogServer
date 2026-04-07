@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
@@ -11,10 +12,14 @@
     <File Path="PanoramicData.SyslogServer.dic" />
     <File Path="README.md" />
     <File Path="version.json" />
+    <File Path="CONTRIBUTING.md" />
+    <File Path="Publish.ps1" />
+    <File Path="SECURITY.md" />
   </Folder>
   <Folder Name="/Solution Items/Tools/">
     <File Path="Tools/Send-UdpDatagram.ps1" />
   </Folder>
   <Project Path="ExampleApp/ExampleApp.csproj" />
   <Project Path="PanoramicData.SyslogServer/PanoramicData.SyslogServer.csproj" />
+  <Project Path="PanoramicData.SyslogServer.Test/PanoramicData.SyslogServer.Test.csproj" />
 </Solution>

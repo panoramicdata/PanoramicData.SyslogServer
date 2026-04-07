@@ -1,5 +1,8 @@
 ﻿namespace PanoramicData.SyslogServer.Config;
 
+/// <summary>
+/// Configuration for the Syslog server.
+/// </summary>
 public class SyslogServerConfiguration
 {
 	/// <summary>

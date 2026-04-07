@@ -1,47 +1,46 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/panoramicdata/PanoramicData.SyslogServer</RepositoryUrl>
-     <PackageTags>syslog,server,logging</PackageTags>
-		<Description>PanoramicData.SyslogServer is a lightweight Syslog server library for .NET.</Description>
-		<Title>PanoramicData.SyslogServer</Title>
-		<PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.SyslogServer</PackageProjectUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<IncludeSymbols>True</IncludeSymbols>
-		<PackageIcon>Panoramic Data.png</PackageIcon>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="..\README.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
-		<PackageReference Include="Nerdbank.GitVersioning">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Update="Panoramic Data.ico">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Update="Panoramic Data.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Services\" />
-	</ItemGroup>
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/panoramicdata/PanoramicData.SyslogServer</RepositoryUrl>
+    <PackageTags>syslog,server,logging</PackageTags>
+    <Description>PanoramicData.SyslogServer is a lightweight Syslog server library for .NET.</Description>
+    <Title>PanoramicData.SyslogServer</Title>
+    <PackageProjectUrl>https://github.com/panoramicdata/PanoramicData.SyslogServer</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeSymbols>True</IncludeSymbols>
+    <PackageIcon>Panoramic Data.png</PackageIcon>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>PanoramicData.SyslogServer</PackageId>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <NeutralResourcesLanguage>en</NeutralResourcesLanguage>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
+    <PackageReference Include="Nerdbank.GitVersioning">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Panoramic Data.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="Panoramic Data.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
 </Project>
