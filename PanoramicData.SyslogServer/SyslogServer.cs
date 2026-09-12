@@ -8,7 +8,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +19,7 @@ namespace PanoramicData.SyslogServer;
 /// <param name="options">The server configuration options.</param>
 /// <param name="loggerFactory">The logger factory.</param>
 /// <param name="syslogApplication">The application that handles received syslog messages.</param>
-public partial class SyslogServer(
+public class SyslogServer(
 	IOptions<SyslogServerConfiguration> options,
 	ILoggerFactory loggerFactory,
 	ISyslogApplication syslogApplication) : IHostedService, IDisposable
@@ -218,7 +217,7 @@ public partial class SyslogServer(
 		try
 		{
 			// Parse PRI, HEADER, and MSG using a regex
-			var syslogRegex = SyslogMessagePattern();
+			var syslogRegex = SyslogMessagePatterns.SyslogMessage();
 			var match = syslogRegex.Match(rawMessage);
 
 			if (match.Success)
@@ -271,7 +270,4 @@ public partial class SyslogServer(
 		Dispose(disposing: true);
 		GC.SuppressFinalize(this);
 	}
-
-	[GeneratedRegex(@"^<(?<pri>\d+)>(?<header>[^ ]+ [^ ]+ [^ ]+) (?<msg>.*)$")]
-	private static partial Regex SyslogMessagePattern();
 }
