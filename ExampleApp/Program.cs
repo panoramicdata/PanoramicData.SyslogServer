@@ -9,11 +9,16 @@ using System.Threading.Tasks;
 
 namespace ExampleApp;
 
-partial class Program
+internal sealed class Program
 {
+	// Never instantiated; it exists only as the entry point and as the ILogger<> category type.
+	private Program()
+	{
+	}
+
 	static async Task Main()
 	{
-		var cancellationTokenSource = new CancellationTokenSource();
+		using var cancellationTokenSource = new CancellationTokenSource();
 		var host = Host.CreateDefaultBuilder()
 			.ConfigureServices((hostBuilderContext, serviceCollection) =>
 			{

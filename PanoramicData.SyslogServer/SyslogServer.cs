@@ -186,7 +186,10 @@ public partial class SyslogServer(
 					if (stream.DataAvailable)
 					{
 						var bytesRead = await stream.ReadAsync(buffer, cancellationToken);
-						if (bytesRead == 0) break;
+						if (bytesRead == 0)
+						{
+							break;
+						}
 
 						var message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 						await ProcessSyslogMessageAsync(
