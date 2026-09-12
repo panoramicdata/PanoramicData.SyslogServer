@@ -5,6 +5,7 @@ using PanoramicData.SyslogServer.Config;
 using PanoramicData.SyslogServer.Interfaces;
 using PanoramicData.SyslogServer.Models;
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -75,7 +76,7 @@ public class SyslogServer(
 			_logger.LogInformation("Starting TCP listener on port {TcpPort}...", _config.TcpPort);
 			try
 			{
-				_tcpListenerTask = TcpListenerLoopAsync(_config.TcpPort.Value, _cancellationTokenSource.Token);
+				_tcpListenerTask = StartTcpListenerAsync(_config.TcpPort.Value, _cancellationTokenSource.Token);
 				_logger.LogInformation("Starting TCP listener on port {TcpPort} complete.", _config.TcpPort);
 			}
 			catch (Exception ex)
@@ -94,25 +95,38 @@ public class SyslogServer(
 	}
 
 	/// <inheritdoc />
-	public Task StopAsync(CancellationToken cancellationToken)
+	public async Task StopAsync(CancellationToken cancellationToken)
 	{
+		Task[] listenerTasks;
+
 		lock (_lock)
 		{
 			if (!_started)
 			{
-				return Task.CompletedTask;
+				return;
 			}
-
-			_cancellationTokenSource.Cancel();
-
-			_udpListenerTask?.Wait(cancellationToken);
-			_tcpListenerTask?.Wait(cancellationToken);
 
 			_started = false;
 
+			listenerTasks = new[] { _udpListenerTask, _tcpListenerTask }
+				.Where(listenerTask => listenerTask is not null)
+				.Select(listenerTask => listenerTask!)
+				.ToArray();
 		}
 
-		return Task.CompletedTask;
+		// Awaited outside the lock: the listeners can take as long as a socket read to notice,
+		// and holding the lock across that would block any concurrent caller for the duration.
+		await _cancellationTokenSource.CancelAsync();
+
+		try
+		{
+			await Task.WhenAll(listenerTasks).WaitAsync(cancellationToken);
+		}
+		catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
+		{
+			// The listeners stop by observing the token, so they finish cancelled rather than
+			// completed. That is how a normal shutdown looks, not a failure worth surfacing.
+		}
 	}
 
 	private async Task UdpListenerLoopAsync(int udpServerPort, CancellationToken cancellationToken)
@@ -141,34 +155,44 @@ public class SyslogServer(
 		}
 	}
 
-	private Task TcpListenerLoopAsync(int tcpServerPort, CancellationToken cancellationToken)
+	/// <summary>
+	/// Binds the TCP listener synchronously, so that the port is accepting connections by the
+	/// time <see cref="StartAsync"/> returns, then hands the accept loop back as a task.
+	/// </summary>
+	private Task StartTcpListenerAsync(int tcpServerPort, CancellationToken cancellationToken)
 	{
-		_logger.LogDebug("Creating TCP Client...");
+		_logger.LogDebug("Creating TCP listener...");
 		var tcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, tcpServerPort));
 		tcpListener.Start();
 
-		while (!cancellationToken.IsCancellationRequested)
+		return TcpListenerLoopAsync(tcpListener, cancellationToken);
+	}
+
+	private async Task TcpListenerLoopAsync(TcpListener tcpListener, CancellationToken cancellationToken)
+	{
+		try
 		{
-			try
+			while (!cancellationToken.IsCancellationRequested)
 			{
-				if (tcpListener.Pending())
+				try
 				{
+					// Awaiting the accept parks this loop until a client arrives, rather than
+					// polling Pending() on a sleeping thread.
+					var client = await tcpListener.AcceptTcpClientAsync(cancellationToken);
+
 					_logger.LogDebug("New socket creating...");
-					var client = tcpListener.AcceptTcpClient();
 					_ = Task.Run(() => HandleTcpClientAsync(client, cancellationToken), cancellationToken);
 				}
-
-				Thread.Sleep(10); // Prevent CPU overuse
-			}
-			catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
-			{
-				_logger.LogError(ex, "Error in TCP listener");
+				catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
+				{
+					_logger.LogError(ex, "Error in TCP listener");
+				}
 			}
 		}
-
-		tcpListener.Stop();
-
-		return Task.CompletedTask;
+		finally
+		{
+			tcpListener.Stop();
+		}
 	}
 
 	private async Task HandleTcpClientAsync(TcpClient client, CancellationToken cancellationToken)
