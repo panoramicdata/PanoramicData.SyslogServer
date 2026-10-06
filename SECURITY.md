@@ -8,9 +8,13 @@ Only the latest released version is supported with security updates.
 
 If you discover a security vulnerability, please report it responsibly.
 
-**Please do not open a public GitHub issue.**
+**Do not open a public GitHub issue.**
 
-Instead, please use [GitHub's private vulnerability reporting](https://github.com/panoramicdata/PanoramicData.SyslogServer/security/advisories/new) and include:
+Instead, use GitHub's private vulnerability reporting: open this repository's **Security** tab
+and choose **Report a vulnerability**, or go straight to
+https://github.com/panoramicdata/PanoramicData.SyslogServer/security/advisories/new
+
+Please include:
 
 - A description of the vulnerability
 - Steps to reproduce the issue
